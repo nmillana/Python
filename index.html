@@ -1,1 +1,1235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Tutor Python Interactivo</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #111827;
+      --primary2: #1f2937;
+      --accent: #4f46e5;
+      --accent-soft: #eef2ff;
+      --good: #047857;
+      --good-soft: #ecfdf5;
+      --bad: #be123c;
+      --bad-soft: #fff1f2;
+      --warn: #92400e;
+      --warn-soft: #fffbeb;
+      --blue: #1d4ed8;
+      --blue-soft: #eff6ff;
+      --code: #020617;
+      --shadow: 0 8px 24px rgba(15, 23, 42, .08);
+      --radius: 24px;
+    }
 
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, .94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 16px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: var(--accent-soft);
+      font-size: 24px;
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+    }
+
+    .subtitle {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 260px;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 14px;
+      height: 42px;
+      min-width: 42px;
+      padding: 0 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .progress-wrap {
+      margin-top: 12px;
+      height: 9px;
+      background: #e7eaf0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #111827);
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    main {
+      padding: 16px;
+      padding-bottom: 96px;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at top left, rgba(79,70,229,.16), transparent 30%),
+        linear-gradient(145deg, #fff, #f8fafc);
+      padding: 24px;
+      border-radius: 30px;
+    }
+
+    .hero h2 {
+      margin: 8px 0 10px;
+      font-size: 32px;
+      line-height: 1.05;
+      letter-spacing: -.04em;
+    }
+
+    .hero p {
+      font-size: 17px;
+      color: #374151;
+      line-height: 1.45;
+    }
+
+    .pill {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: var(--accent-soft);
+      color: #3730a3;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .section-title {
+      margin: 4px 0 12px;
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    h2, h3, p { margin-top: 0; }
+
+    p {
+      line-height: 1.55;
+    }
+
+    .muted { color: var(--muted); }
+    .small { font-size: 13px; color: var(--muted); }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid-2 {
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 760px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+
+    .level-card, .achievement-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .level-card h3 {
+      font-size: 17px;
+      margin: 0 0 8px;
+    }
+
+    .lesson-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .lesson-chip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: #f9fafb;
+      border-radius: 16px;
+      padding: 12px;
+      cursor: pointer;
+      text-align: left;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .lesson-chip.done {
+      background: var(--good-soft);
+      border-color: #a7f3d0;
+      color: var(--good);
+    }
+
+    .btn {
+      width: 100%;
+      border: 0;
+      border-radius: 18px;
+      padding: 15px 18px;
+      background: var(--primary);
+      color: white;
+      font-size: 16px;
+      font-weight: 850;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .btn.secondary {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn.soft {
+      background: var(--accent-soft);
+      color: #3730a3;
+    }
+
+    .btn.warn {
+      background: var(--warn-soft);
+      color: var(--warn);
+      border: 1px solid #fde68a;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 680px) {
+      .btn-row.two { grid-template-columns: 1fr 1fr; }
+      .btn-row.three { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .lesson-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .lesson-title {
+      font-size: 27px;
+      line-height: 1.1;
+      margin: 8px 0 6px;
+      letter-spacing: -.03em;
+    }
+
+    .challenge-box {
+      border: 1px solid #fde68a;
+      background: var(--warn-soft);
+      color: var(--warn);
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .concept-box {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .concept-box h3, .challenge-box h3 {
+      font-size: 16px;
+      margin: 0 0 6px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 360px;
+      resize: vertical;
+      outline: none;
+      border: 1px solid #0f172a;
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 22px;
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 16px;
+      line-height: 1.55;
+      tab-size: 4;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    textarea::placeholder {
+      color: #64748b;
+    }
+
+    .editor-tools {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .tool-btn {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 8px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .feedback-item {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 13px;
+      font-size: 15px;
+      line-height: 1.45;
+      margin-top: 10px;
+    }
+
+    .feedback-item.good {
+      background: var(--good-soft);
+      color: var(--good);
+      border-color: #a7f3d0;
+    }
+
+    .feedback-item.bad {
+      background: var(--bad-soft);
+      color: var(--bad);
+      border-color: #fecdd3;
+    }
+
+    .feedback-item.blue {
+      background: var(--blue-soft);
+      color: var(--blue);
+      border-color: #bfdbfe;
+    }
+
+    .feedback-item.warn {
+      background: var(--warn-soft);
+      color: var(--warn);
+      border-color: #fde68a;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 18px;
+      padding: 15px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 14px;
+      line-height: 1.55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .hint-box {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #f9fafb;
+      padding: 14px;
+      min-height: 56px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      z-index: 60;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--line);
+    }
+
+    .bottom-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .hidden { display: none !important; }
+
+    .error-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .error-card h3 {
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .kbd {
+      font-family: ui-monospace, monospace;
+      font-weight: 800;
+      background: #f3f4f6;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1px 6px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      background: #f9fafb;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .fade-in {
+      animation: fade .18s ease-out;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="header-row">
+        <div class="brand">
+          <div class="brand-icon">🐍</div>
+          <div>
+            <h1>Tutor Python</h1>
+            <div class="subtitle">Practica, corrige y avanza por niveles</div>
+          </div>
+        </div>
+        <button class="icon-btn" onclick="showScreen('home')">Inicio</button>
+      </div>
+      <div class="progress-wrap"><div id="progressBar" class="progress"></div></div>
+    </header>
+
+    <main>
+      <section id="home" class="screen active">
+        <div class="hero card">
+          <span class="pill">📱 App web para celular</span>
+          <h2>Aprende Python haciendo, no mirando.</h2>
+          <p>Escribe código desde cero, recibe feedback claro y avanza por niveles. El ejemplo está oculto para que primero pienses tú.</p>
+          <div style="height:14px"></div>
+          <button class="btn" onclick="startPractice()">Empezar práctica</button>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Tu avance</h2>
+          <div class="stats">
+            <div class="stat"><strong id="statDone">0</strong><span class="small">completadas</span></div>
+            <div class="stat"><strong id="statAttempts">0</strong><span class="small">intentos</span></div>
+            <div class="stat"><strong id="statAchievements">0</strong><span class="small">logros</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Lecciones por nivel</h2>
+          <div id="levelList" class="grid"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Modo repaso de errores frecuentes</h2>
+          <p class="muted">Repasa los errores que más se repiten cuando una persona está aprendiendo Python.</p>
+          <div style="height:12px"></div>
+          <button class="btn secondary" onclick="showScreen('errors')">Abrir repaso de errores</button>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Logros</h2>
+          <div id="achievementsList" class="grid grid-2"></div>
+        </div>
+      </section>
+
+      <section id="practice" class="screen">
+        <div class="card">
+          <div class="lesson-head">
+            <div>
+              <span id="lessonBadge" class="pill">Nivel</span>
+              <h2 id="lessonTitle" class="lesson-title">Lección</h2>
+              <p id="lessonMini" class="muted"></p>
+            </div>
+            <button class="icon-btn" onclick="showScreen('home')">Mapa</button>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="concept-box">
+            <h3>💡 Concepto</h3>
+            <p id="lessonConcept"></p>
+          </div>
+          <div class="concept-box">
+            <h3>📌 Regla clave</h3>
+            <p id="lessonRule"></p>
+          </div>
+        </div>
+
+        <div class="challenge-box" style="margin:14px 0;">
+          <h3>🎯 Desafío</h3>
+          <p id="lessonChallenge"></p>
+        </div>
+
+        <div class="card">
+          <div class="lesson-head">
+            <h2 class="section-title">Tu código</h2>
+            <button class="icon-btn" onclick="resetEditor()">Borrar</button>
+          </div>
+
+          <div class="editor-tools">
+            <button class="tool-btn" onclick="insertText('    ')">Tab</button>
+            <button class="tool-btn" onclick="insertText(':')">:</button>
+            <button class="tool-btn" onclick="insertText('()')">( )</button>
+            <button class="tool-btn" onclick="insertText('print()')">print</button>
+          </div>
+
+          <textarea id="editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Escribe aquí tu solución desde cero..."></textarea>
+
+          <div class="btn-row two" style="margin-top:12px;">
+            <button class="btn" onclick="reviewCode()">Revisar mi código</button>
+            <button class="btn secondary" onclick="nextLesson()">Siguiente</button>
+          </div>
+        </div>
+
+        <div id="feedbackCard" class="card hidden">
+          <div class="lesson-head">
+            <h2 class="section-title">Feedback</h2>
+            <span id="scoreBadge" class="pill">0%</span>
+          </div>
+          <div id="syntaxFeedback"></div>
+          <div id="logicFeedback"></div>
+          <div id="finalAdvice" class="feedback-item blue"></div>
+        </div>
+
+        <div class="card">
+          <div class="lesson-head">
+            <h2 class="section-title">Pistas progresivas</h2>
+            <button class="btn soft" style="width:auto;" onclick="showNextHint()">Dame una pista</button>
+          </div>
+          <div id="hintBox" class="hint-box muted">Primero intenta resolver sin pistas. Luego pide una pista si te bloqueas.</div>
+        </div>
+
+        <div class="card">
+          <div class="lesson-head">
+            <h2 class="section-title">Solución</h2>
+            <button id="solutionBtn" class="btn warn" style="width:auto;" onclick="toggleSolution()">Ver solución solo después de intentar</button>
+          </div>
+          <p id="solutionGate" class="muted">La solución se desbloquea después de al menos 2 intentos en esta lección.</p>
+          <pre id="solutionBox" class="hidden"></pre>
+        </div>
+
+        <div class="btn-row three">
+          <button class="btn secondary" onclick="previousLesson()">Anterior</button>
+          <button class="btn secondary" onclick="showScreen('errors')">Errores frecuentes</button>
+          <button class="btn secondary" onclick="nextLesson()">Siguiente</button>
+        </div>
+      </section>
+
+      <section id="errors" class="screen">
+        <div class="card">
+          <span class="pill">🧯 Repaso rápido</span>
+          <h2 class="section-title" style="margin-top:12px;">Errores frecuentes en Python</h2>
+          <p class="muted">Estos son los errores que más probablemente te van a aparecer mientras practicas.</p>
+        </div>
+        <div id="errorsList" class="grid"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <div class="bottom-inner">
+        <button id="bottomReview" class="btn" onclick="reviewCode()">Revisar</button>
+        <button class="btn secondary" onclick="nextLesson()">Siguiente</button>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    const lessons = [
+      {
+        level: "Nivel 1",
+        title: "Tipos de datos",
+        mini: "int, float, str y bool",
+        concept: "Python trabaja con datos. Cada dato tiene un tipo, y ese tipo define qué puedes hacer con él.",
+        rule: "Texto entre comillas. Números sin comillas. Booleanos como True o False.",
+        challenge: "Crea variables para nombre, edad, altura y si eres mayor de edad. Luego imprime cada una.",
+        hints: [
+          "Necesitas cuatro variables: nombre, edad, altura y es_mayor.",
+          "El nombre debe ir entre comillas. Ejemplo: nombre = \"Ana\".",
+          "Usa print() una vez por cada variable."
+        ],
+        solution: 'nombre = "Ana"\nedad = 25\naltura = 1.75\nes_mayor = True\n\nprint(nombre)\nprint(edad)\nprint(altura)\nprint(es_mayor)',
+        checks: [
+          {name:"Texto", test:c=>/[\"']/.test(c), ok:"Usaste comillas para texto.", bad:"Te falta texto entre comillas, por ejemplo nombre = \"Ana\"."},
+          {name:"Booleano", test:c=>/True|False/.test(c), ok:"Usaste True o False correctamente.", bad:"Te falta un booleano: True o False, con mayúscula inicial."},
+          {name:"Impresión", test:c=>(c.match(/print\s*\(/g)||[]).length>=2, ok:"Usaste print() para mostrar datos.", bad:"Te falta usar print() para mostrar los valores."}
+        ]
+      },
+      {
+        level: "Nivel 1",
+        title: "input() y conversión",
+        mini: "pedir datos al usuario",
+        concept: "input() pide datos, pero siempre recibe texto. Para usar una edad como número debes convertir con int().",
+        rule: "Para edad: edad = int(input(\"Ingresa tu edad: \")).",
+        challenge: "Pide la edad al usuario y luego imprime la edad ingresada.",
+        hints: [
+          "Parte creando una variable llamada edad.",
+          "Usa int(input(...)) porque una edad es número.",
+          "Después usa print() para mostrar la edad."
+        ],
+        solution: 'edad = int(input("Ingresa tu edad: "))\nprint("Tu edad es", edad)',
+        checks: [
+          {name:"input", test:c=>/input\s*\(/.test(c), ok:"Usaste input() para pedir información.", bad:"Te falta input() con paréntesis."},
+          {name:"conversión", test:c=>/int\s*\(\s*input\s*\(/.test(c), ok:"Convertiste el dato a entero con int().", bad:"Como edad es número, conviene usar int(input(...))."},
+          {name:"salida", test:c=>/print\s*\(/.test(c), ok:"Mostraste el resultado con print().", bad:"Te falta print() para mostrar la edad."}
+        ]
+      },
+      {
+        level: "Nivel 2",
+        title: "if / else",
+        mini: "decisiones simples",
+        concept: "if permite que Python tome una decisión. else se ejecuta cuando la condición no se cumple.",
+        rule: "Después de if y else van dos puntos. Lo que está dentro debe ir indentado.",
+        challenge: "Pide la edad. Si es mayor o igual a 18, imprime que es mayor de edad. Si no, imprime que es menor.",
+        hints: [
+          "Primero pide la edad con int(input()).",
+          "La condición es edad >= 18.",
+          "Los print debajo de if y else deben ir con sangría."
+        ],
+        solution: 'edad = int(input("Ingresa tu edad: "))\n\nif edad >= 18:\n    print("Eres mayor de edad")\nelse:\n    print("Eres menor de edad")',
+        checks: [
+          {name:"if", test:c=>/if\s+.+:/.test(c), ok:"Tu if tiene condición y dos puntos.", bad:"El if debe terminar con dos puntos (:)."},
+          {name:"else", test:c=>/else\s*:/.test(c), ok:"Usaste else correctamente.", bad:"Te falta else: con dos puntos."},
+          {name:"indentación", test:c=>/if[\s\S]*:\n\s+print/.test(c), ok:"Indentaste el bloque del if.", bad:"Después del if, el print debe ir indentado hacia adentro."},
+          {name:"comparación", test:c=>!/if\s+[^\n]*=[^=]/.test(c), ok:"No confundiste = con comparación.", bad:"Estás usando = dentro del if. Para comparar usa ==, >=, <=, > o <."}
+        ]
+      },
+      {
+        level: "Nivel 2",
+        title: "if / elif / else",
+        mini: "decisiones con varios caminos",
+        concept: "elif permite revisar otra condición si la anterior no se cumplió. Python evalúa de arriba hacia abajo.",
+        rule: "Primero evalúa la condición más exigente.",
+        challenge: "Pide una nota. Si es >= 7, muestra excelencia; si es >= 4, aprobado; si no, reprobado.",
+        hints: [
+          "Usa float(input()) porque la nota puede tener decimal.",
+          "Primero pregunta si nota >= 7.",
+          "Luego usa elif nota >= 4."
+        ],
+        solution: 'nota = float(input("Ingresa tu nota: "))\n\nif nota >= 7:\n    print("Aprobado con excelencia")\nelif nota >= 4:\n    print("Aprobado")\nelse:\n    print("Reprobado")',
+        checks: [
+          {name:"float", test:c=>/float\s*\(\s*input\s*\(/.test(c), ok:"Usaste float(input()) para nota.", bad:"Para notas conviene usar float(input(...))."},
+          {name:"elif", test:c=>/elif\s+.+:/.test(c), ok:"Usaste elif correctamente.", bad:"Te falta elif con condición y dos puntos."},
+          {name:"orden", test:c=>/nota\s*>=\s*7[\s\S]*nota\s*>=\s*4/.test(c), ok:"Ordenaste bien las condiciones.", bad:"Primero debería ir nota >= 7 y luego nota >= 4."}
+        ]
+      },
+      {
+        level: "Nivel 2",
+        title: "Módulo %",
+        mini: "pares y múltiplos",
+        concept: "El operador % entrega el resto de una división. Sirve para saber si un número es par o múltiplo.",
+        rule: "Si numero % 2 == 0, es par.",
+        challenge: "Pide un número e indica si es múltiplo de 3, de 5 o de ambos. Primero evalúa ambos.",
+        hints: [
+          "Usa numero % 3 == 0 para múltiplo de 3.",
+          "Usa numero % 5 == 0 para múltiplo de 5.",
+          "El primer if debe usar and para ambos."
+        ],
+        solution: 'numero = int(input("Número: "))\n\nif numero % 3 == 0 and numero % 5 == 0:\n    print("Múltiplo de ambos")\nelif numero % 3 == 0:\n    print("Múltiplo de 3")\nelif numero % 5 == 0:\n    print("Múltiplo de 5")\nelse:\n    print("No es múltiplo de 3 ni de 5")',
+        checks: [
+          {name:"módulo", test:c=>/%/.test(c), ok:"Usaste % para revisar múltiplos.", bad:"Te falta usar el operador %."},
+          {name:"and", test:c=>/and/.test(c), ok:"Usaste and para el caso de ambos.", bad:"El caso de ambos necesita and."},
+          {name:"ambos primero", test:c=>/if[\s\S]*%\s*3\s*==\s*0[\s\S]*and[\s\S]*%\s*5\s*==\s*0/.test(c), ok:"Evaluaste primero el caso más específico.", bad:"El primer if debería evaluar múltiplo de 3 y de 5."}
+        ]
+      },
+      {
+        level: "Nivel 3",
+        title: "for y range()",
+        mini: "repetir cantidad conocida",
+        concept: "for repite una instrucción una cantidad conocida de veces. range() genera números.",
+        rule: "range(1, limite + 1) cuenta desde 1 hasta el límite incluido.",
+        challenge: "Pide un número y cuenta desde 1 hasta ese número usando for.",
+        hints: [
+          "Pide el límite con int(input()).",
+          "Usa for numero in range(1, limite + 1):",
+          "El print va indentado dentro del for."
+        ],
+        solution: 'limite = int(input("Hasta qué número contar: "))\n\nfor numero in range(1, limite + 1):\n    print(numero)',
+        checks: [
+          {name:"for", test:c=>/for\s+\w+\s+in\s+range\s*\(/.test(c), ok:"Usaste for con range().", bad:"Te falta for con range()."},
+          {name:"desde 1", test:c=>/range\s*\(\s*1\s*,/.test(c), ok:"Tu conteo parte desde 1.", bad:"Para partir en 1 usa range(1, limite + 1)."},
+          {name:"indentación", test:c=>/for[\s\S]*:\n\s+print/.test(c), ok:"Indentaste el print dentro del for.", bad:"El print dentro del for debe ir indentado."}
+        ]
+      },
+      {
+        level: "Nivel 3",
+        title: "while y break",
+        mini: "repetir hasta cortar",
+        concept: "while repite mientras una condición sea verdadera. break corta el bucle.",
+        rule: "while True se usa cuando quieres repetir hasta que ocurra un break.",
+        challenge: "Pide números en un while. Detén el programa cuando el número sea par.",
+        hints: [
+          "Usa while True: para repetir.",
+          "Pide un número dentro del while.",
+          "Si numero % 2 == 0, usa break."
+        ],
+        solution: 'while True:\n    numero = int(input("Número: "))\n\n    if numero % 2 == 0:\n        print("Número par encontrado")\n        break',
+        checks: [
+          {name:"while", test:c=>/while\s+True\s*:/.test(c), ok:"Usaste while True correctamente.", bad:"Para este ejercicio puedes usar while True:."},
+          {name:"par", test:c=>/%\s*2\s*==\s*0/.test(c), ok:"Detectaste el número par con %.", bad:"Para saber si es par usa numero % 2 == 0."},
+          {name:"break", test:c=>/break/.test(c), ok:"Incluiste break para detener el ciclo.", bad:"Te falta break para cortar el while."}
+        ]
+      },
+      {
+        level: "Nivel 4",
+        title: "Listas",
+        mini: "colecciones editables",
+        concept: "Una lista guarda varios elementos en orden y se puede modificar.",
+        rule: "append agrega, pop elimina y sort ordena.",
+        challenge: "Crea una lista de frutas, elimina la segunda, agrega naranja, ordena e imprime cada fruta.",
+        hints: [
+          "La segunda fruta tiene índice 1.",
+          "Usa frutas.pop(1).",
+          "Usa for fruta in frutas: para imprimir cada una."
+        ],
+        solution: 'frutas = ["manzana", "pera", "plátano", "kiwi"]\n\nfrutas.pop(1)\nfrutas.append("naranja")\nfrutas.sort()\n\nfor fruta in frutas:\n    print(fruta)',
+        checks: [
+          {name:"lista", test:c=>/\[[\s\S]*\]/.test(c), ok:"Creaste una lista con corchetes.", bad:"Te falta una lista con corchetes []."},
+          {name:"pop", test:c=>/\.pop\s*\(\s*1\s*\)/.test(c), ok:"Eliminaste la segunda fruta con pop(1).", bad:"Para eliminar la segunda fruta usa pop(1)."},
+          {name:"append", test:c=>/\.append\s*\(/.test(c), ok:"Usaste append() para agregar.", bad:"Te falta append() para agregar naranja."},
+          {name:"sort", test:c=>/\.sort\s*\(\s*\)/.test(c), ok:"Ordenaste con sort().", bad:"Te falta sort() para ordenar."}
+        ]
+      },
+      {
+        level: "Nivel 4",
+        title: "Diccionarios",
+        mini: "clave y valor",
+        concept: "Un diccionario guarda datos como clave y valor. Sirve para menús, fichas y opciones.",
+        rule: ".get() busca una clave y permite dar un valor si no existe.",
+        challenge: "Crea un menú de mascotas con diccionario y .get(). Si no existe, muestra Mascota no reconocida.",
+        hints: [
+          "Un diccionario usa llaves {}.",
+          "Cada opción se escribe como clave: valor.",
+          "Usa mascotas.get(mascota, \"Mascota no reconocida\")."
+        ],
+        solution: 'mascotas = {\n    "Perro": "¡Tienes un compañero leal!",\n    "Gato": "¡Tienes un amigo independiente!",\n    "Ave": "¡Tienes un amigo que canta!",\n    "Pez": "¡Tienes un amigo tranquilo!"\n}\n\nmascota = input("Mascota: ").capitalize()\nprint(mascotas.get(mascota, "Mascota no reconocida"))',
+        checks: [
+          {name:"diccionario", test:c=>/\{[\s\S]*:[\s\S]*\}/.test(c), ok:"Creaste un diccionario clave-valor.", bad:"Te falta un diccionario con pares clave: valor."},
+          {name:"get", test:c=>/\.get\s*\(/.test(c), ok:"Usaste .get() para evitar errores.", bad:"Te falta .get() para manejar mascotas no reconocidas."},
+          {name:"input", test:c=>/input\s*\(/.test(c), ok:"Pediste la mascota con input().", bad:"Te falta pedir la mascota con input()."}
+        ]
+      },
+      {
+        level: "Nivel 4",
+        title: "Conjuntos",
+        mini: "elementos únicos",
+        concept: "Un conjunto guarda elementos únicos y sirve para comparar grupos.",
+        rule: "& = intersección, | = unión, ^ = diferencia simétrica.",
+        challenge: "Crea dos conjuntos de estudiantes y muestra los elementos comunes y los únicos de cada grupo.",
+        hints: [
+          "Los conjuntos usan llaves {}.",
+          "Usa & para elementos comunes.",
+          "Usa ^ para elementos que están en un grupo u otro, pero no en ambos."
+        ],
+        solution: 'cursoA = {"Ana", "Luis", "Pedro"}\ncursoB = {"Pedro", "Sofía", "Carlos"}\n\nprint("En común:", cursoA & cursoB)\nprint("Únicos:", cursoA ^ cursoB)',
+        checks: [
+          {name:"conjuntos", test:c=>/\{[\s\S]*\}/.test(c), ok:"Creaste conjuntos con llaves.", bad:"Te falta crear conjuntos con llaves {}."},
+          {name:"intersección", test:c=>/&/.test(c), ok:"Usaste & para elementos comunes.", bad:"Te falta usar & para la intersección."},
+          {name:"diferencia simétrica", test:c=>/\^/.test(c), ok:"Usaste ^ para únicos de cada grupo.", bad:"Te falta usar ^ para la diferencia simétrica."}
+        ]
+      },
+      {
+        level: "Nivel 5",
+        title: "Funciones",
+        mini: "def, parámetros y return",
+        concept: "Una función guarda una lógica reutilizable. Recibe datos por parámetros y devuelve resultados con return.",
+        rule: "Una función clara hace una sola tarea concreta.",
+        challenge: "Crea una función evaluar_nota(nota) que retorne Aprobado si nota >= 4 y Reprobado si no. Luego pide una nota e imprime el resultado.",
+        hints: [
+          "Define la función con def evaluar_nota(nota):",
+          "Dentro usa if nota >= 4:",
+          "Fuera de la función pide la nota con float(input())."
+        ],
+        solution: 'def evaluar_nota(nota):\n    if nota >= 4:\n        return "Aprobado"\n    else:\n        return "Reprobado"\n\nnota = float(input("Nota: "))\nresultado = evaluar_nota(nota)\nprint(resultado)',
+        checks: [
+          {name:"def", test:c=>/def\s+evaluar_nota\s*\(\s*nota\s*\)\s*:/.test(c), ok:"Definiste evaluar_nota(nota).", bad:"Define la función como def evaluar_nota(nota):"},
+          {name:"return", test:c=>/return/.test(c), ok:"Usaste return dentro de la función.", bad:"Te falta return para devolver el resultado."},
+          {name:"if", test:c=>/if[\s\S]*nota\s*>=\s*4/.test(c), ok:"Evaluaste nota >= 4.", bad:"Dentro de la función debes evaluar si nota >= 4."},
+          {name:"input", test:c=>/float\s*\(\s*input\s*\(/.test(c), ok:"Pediste una nota con float(input()).", bad:"Para la nota usa float(input())."}
+        ]
+      }
+    ];
+
+    const commonErrors = [
+      {
+        title: "Olvidar los dos puntos",
+        why: "Después de if, elif, else, for, while y def siempre van dos puntos.",
+        bad: "if edad >= 18\n    print(\"Mayor\")",
+        good: "if edad >= 18:\n    print(\"Mayor\")"
+      },
+      {
+        title: "No indentar el bloque",
+        why: "Python usa espacios para saber qué pertenece al if, for, while o función.",
+        bad: "if edad >= 18:\nprint(\"Mayor\")",
+        good: "if edad >= 18:\n    print(\"Mayor\")"
+      },
+      {
+        title: "Confundir = con ==",
+        why: "= asigna un valor. == compara dos valores.",
+        bad: "if nombre = \"Ana\":\n    print(nombre)",
+        good: "if nombre == \"Ana\":\n    print(nombre)"
+      },
+      {
+        title: "Olvidar convertir input()",
+        why: "input() devuelve texto. Para comparar con números usa int() o float().",
+        bad: "edad = input(\"Edad: \")\nif edad >= 18:\n    print(\"Mayor\")",
+        good: "edad = int(input(\"Edad: \"))\nif edad >= 18:\n    print(\"Mayor\")"
+      },
+      {
+        title: "Modificar una tupla",
+        why: "Las tuplas son inmutables. Si necesitas cambiar datos, usa una lista.",
+        bad: "datos = (\"Ana\", 25)\ndatos[1] = 26",
+        good: "datos = [\"Ana\", 25]\ndatos[1] = 26"
+      }
+    ];
+
+    const achievements = [
+      { id: "firstAttempt", title: "Primer intento", desc: "Escribiste y revisaste tu primer código.", unlocked: () => getTotalAttempts() >= 1 },
+      { id: "threeLessons", title: "Tres lecciones", desc: "Completaste 3 lecciones.", unlocked: () => Object.keys(getCompleted()).length >= 3 },
+      { id: "halfway", title: "Mitad del camino", desc: "Completaste al menos la mitad del curso.", unlocked: () => Object.keys(getCompleted()).length >= Math.ceil(lessons.length / 2) },
+      { id: "allDone", title: "Ruta completa", desc: "Completaste todas las lecciones.", unlocked: () => Object.keys(getCompleted()).length >= lessons.length }
+    ];
+
+    let state = loadState();
+    let currentLesson = state.currentLesson || 0;
+    let hintIndex = 0;
+    let solutionVisible = false;
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem("pythonTutorStateV3")) || { completed: {}, attempts: {}, drafts: {}, currentLesson: 0 };
+      } catch (e) {
+        return { completed: {}, attempts: {}, drafts: {}, currentLesson: 0 };
+      }
+    }
+
+    function saveState() {
+      state.currentLesson = currentLesson;
+      try { localStorage.setItem("pythonTutorStateV3", JSON.stringify(state)); } catch(e) {}
+      renderProgress();
+    }
+
+    function getCompleted() {
+      return state.completed || {};
+    }
+
+    function getTotalAttempts() {
+      return Object.values(state.attempts || {}).reduce((a, b) => a + b, 0);
+    }
+
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      $(id).classList.add("active");
+      $("bottomReview").style.display = id === "practice" ? "block" : "none";
+      if (id === "home") renderHome();
+      if (id === "errors") renderErrors();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startPractice() {
+      loadLesson(currentLesson);
+      showScreen("practice");
+    }
+
+    function renderProgress() {
+      const completed = Object.keys(getCompleted()).length;
+      const pct = Math.round((completed / lessons.length) * 100);
+      $("progressBar").style.width = pct + "%";
+    }
+
+    function renderHome() {
+      renderProgress();
+      $("statDone").textContent = Object.keys(getCompleted()).length;
+      $("statAttempts").textContent = getTotalAttempts();
+      $("statAchievements").textContent = achievements.filter(a => a.unlocked()).length;
+
+      const grouped = {};
+      lessons.forEach((l, i) => {
+        if (!grouped[l.level]) grouped[l.level] = [];
+        grouped[l.level].push({ ...l, index: i });
+      });
+
+      const list = $("levelList");
+      list.innerHTML = "";
+
+      Object.keys(grouped).forEach(level => {
+        const wrap = document.createElement("div");
+        wrap.className = "level-card";
+        const doneCount = grouped[level].filter(x => getCompleted()[x.index]).length;
+        wrap.innerHTML = `<h3>${level}</h3><p class="small">${doneCount} de ${grouped[level].length} completadas</p>`;
+        const chips = document.createElement("div");
+        chips.className = "lesson-list";
+        grouped[level].forEach(item => {
+          const btn = document.createElement("button");
+          btn.className = "lesson-chip " + (getCompleted()[item.index] ? "done" : "");
+          btn.innerHTML = `<span>${item.title}</span><span>${getCompleted()[item.index] ? "✓" : "→"}</span>`;
+          btn.onclick = () => { loadLesson(item.index); showScreen("practice"); };
+          chips.appendChild(btn);
+        });
+        wrap.appendChild(chips);
+        list.appendChild(wrap);
+      });
+
+      const ach = $("achievementsList");
+      ach.innerHTML = "";
+      achievements.forEach(a => {
+        const unlocked = a.unlocked();
+        const div = document.createElement("div");
+        div.className = "achievement-card";
+        div.style.opacity = unlocked ? "1" : ".55";
+        div.innerHTML = `<h3>${unlocked ? "🏆" : "🔒"} ${a.title}</h3><p class="small">${a.desc}</p>`;
+        ach.appendChild(div);
+      });
+    }
+
+    function loadLesson(index) {
+      currentLesson = Math.max(0, Math.min(index, lessons.length - 1));
+      const l = lessons[currentLesson];
+      $("lessonBadge").textContent = `${l.level} · ${currentLesson + 1}/${lessons.length}`;
+      $("lessonTitle").textContent = l.title;
+      $("lessonMini").textContent = l.mini;
+      $("lessonConcept").textContent = l.concept;
+      $("lessonRule").textContent = l.rule;
+      $("lessonChallenge").textContent = l.challenge;
+      $("editor").value = (state.drafts && state.drafts[currentLesson]) || "";
+      $("feedbackCard").classList.add("hidden");
+      $("hintBox").textContent = "Primero intenta resolver sin pistas. Luego pide una pista si te bloqueas.";
+      $("hintBox").className = "hint-box muted";
+      hintIndex = 0;
+      solutionVisible = false;
+      $("solutionBox").classList.add("hidden");
+      $("solutionBox").textContent = l.solution;
+      updateSolutionGate();
+      saveState();
+    }
+
+    function saveDraft() {
+      state.drafts = state.drafts || {};
+      state.drafts[currentLesson] = $("editor").value;
+      saveState();
+    }
+
+    function resetEditor() {
+      $("editor").value = "";
+      saveDraft();
+      $("feedbackCard").classList.add("hidden");
+    }
+
+    function nextLesson() {
+      saveDraft();
+      if ($("practice").classList.contains("active")) {
+        loadLesson(Math.min(currentLesson + 1, lessons.length - 1));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        startPractice();
+      }
+    }
+
+    function previousLesson() {
+      saveDraft();
+      loadLesson(Math.max(currentLesson - 1, 0));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function insertText(text) {
+      const editor = $("editor");
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      editor.value = editor.value.substring(0, start) + text + editor.value.substring(end);
+      editor.focus();
+      editor.selectionStart = editor.selectionEnd = start + text.length;
+      saveDraft();
+    }
+
+    $("editor").addEventListener("input", saveDraft);
+
+    function showNextHint() {
+      const l = lessons[currentLesson];
+      if (hintIndex < l.hints.length) {
+        $("hintBox").textContent = `Pista ${hintIndex + 1}: ${l.hints[hintIndex]}`;
+        $("hintBox").className = "hint-box";
+        hintIndex += 1;
+      } else {
+        $("hintBox").textContent = "No hay más pistas. Intenta revisar el feedback o desbloquear la solución si ya hiciste dos intentos.";
+        $("hintBox").className = "hint-box";
+      }
+    }
+
+    function toggleSolution() {
+      const attempts = (state.attempts && state.attempts[currentLesson]) || 0;
+      if (attempts < 2) {
+        $("solutionGate").textContent = `Aún no: llevas ${attempts} intento(s). Haz al menos 2 intentos antes de ver la solución.`;
+        $("solutionGate").style.color = "var(--bad)";
+        return;
+      }
+      solutionVisible = !solutionVisible;
+      $("solutionBox").classList.toggle("hidden", !solutionVisible);
+      $("solutionBtn").textContent = solutionVisible ? "Ocultar solución" : "Ver solución";
+    }
+
+    function updateSolutionGate() {
+      const attempts = (state.attempts && state.attempts[currentLesson]) || 0;
+      if (attempts >= 2) {
+        $("solutionGate").textContent = "Solución desbloqueada. Úsala para comparar después de intentar.";
+        $("solutionGate").style.color = "var(--muted)";
+      } else {
+        $("solutionGate").textContent = `La solución se desbloquea después de 2 intentos. Llevas ${attempts}.`;
+        $("solutionGate").style.color = "var(--muted)";
+      }
+    }
+
+    function syntaxWarnings(code) {
+      const warnings = [];
+      const lines = code.split("\n");
+
+      lines.forEach((line, index) => {
+        const trimmed = line.trim();
+
+        if (/^(if|elif|else|for|while|def)\b/.test(trimmed) && !trimmed.endsWith(":")) {
+          warnings.push({
+            title: `Línea ${index + 1}: falta revisar dos puntos`,
+            msg: `Después de "${trimmed}" probablemente falta ":" al final.`
+          });
+        }
+
+        if (/^if\b/.test(trimmed) && /\s=\s/.test(trimmed) && !/==|>=|<=|!=/.test(trimmed)) {
+          warnings.push({
+            title: `Línea ${index + 1}: comparación incorrecta`,
+            msg: "Usaste = dentro de un if. Para comparar usa ==, >=, <=, > o <."
+          });
+        }
+
+        if (/input["']/.test(trimmed)) {
+          warnings.push({
+            title: `Línea ${index + 1}: input mal escrito`,
+            msg: "input debe llevar paréntesis: input(\"Ingresa un dato: \")."
+          });
+        }
+      });
+
+      for (let i = 0; i < lines.length - 1; i++) {
+        const current = lines[i].trim();
+        const next = lines[i + 1];
+
+        if (/^(if|elif|else|for|while|def)\b/.test(current) && current.endsWith(":")) {
+          if (next.trim() !== "" && !/^\s+/.test(next)) {
+            warnings.push({
+              title: `Línea ${i + 2}: falta indentación`,
+              msg: `Después de "${current}", el código debe ir hacia adentro con espacios.`
+            });
+          }
+        }
+      }
+
+      return warnings;
+    }
+
+    function reviewCode() {
+      if (!$("practice").classList.contains("active")) {
+        startPractice();
+        return;
+      }
+
+      saveDraft();
+      const code = $("editor").value.trim();
+      const l = lessons[currentLesson];
+      const syntax = $("syntaxFeedback");
+      const logic = $("logicFeedback");
+
+      syntax.innerHTML = "";
+      logic.innerHTML = "";
+      $("feedbackCard").classList.remove("hidden");
+
+      state.attempts = state.attempts || {};
+      state.attempts[currentLesson] = (state.attempts[currentLesson] || 0) + 1;
+
+      if (!code) {
+        $("scoreBadge").textContent = "0%";
+        syntax.innerHTML = `<div class="feedback-item warn"><strong>Aún no hay código.</strong><br>Escribe una primera versión, aunque no esté perfecta. Luego la corregimos.</div>`;
+        $("finalAdvice").className = "feedback-item blue";
+        $("finalAdvice").textContent = "Parte por la primera línea. En Python se aprende escribiendo y depurando.";
+        saveState();
+        updateSolutionGate();
+        return;
+      }
+
+      const warnings = syntaxWarnings(code);
+      warnings.forEach(w => {
+        const div = document.createElement("div");
+        div.className = "feedback-item bad";
+        div.innerHTML = `<strong>${w.title}</strong><br>${w.msg}`;
+        syntax.appendChild(div);
+      });
+
+      let passed = 0;
+      l.checks.forEach(ch => {
+        const ok = ch.test(code);
+        if (ok) passed++;
+        const div = document.createElement("div");
+        div.className = "feedback-item " + (ok ? "good" : "bad");
+        div.innerHTML = `<strong>${ok ? "Correcto" : "Revisar"}: ${ch.name}</strong><br>${ok ? ch.ok : ch.bad}`;
+        logic.appendChild(div);
+      });
+
+      const score = Math.round((passed / l.checks.length) * 100);
+      $("scoreBadge").textContent = `${score}%`;
+
+      if (score >= 80 && warnings.length === 0) {
+        state.completed = state.completed || {};
+        state.completed[currentLesson] = true;
+        $("finalAdvice").className = "feedback-item good";
+        $("finalAdvice").innerHTML = "<strong>Buen avance.</strong><br>Tu solución cumple lo principal. Ahora modifica un dato y vuelve a probar mentalmente qué debería pasar.";
+      } else {
+        $("finalAdvice").className = "feedback-item blue";
+        $("finalAdvice").innerHTML = "<strong>Corrección estratégica.</strong><br>Corrige primero lo estructural: dos puntos, indentación, input() y comparación. Después revisa la lógica del ejercicio.";
+      }
+
+      saveState();
+      updateSolutionGate();
+      $("feedbackCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function renderErrors() {
+      const list = $("errorsList");
+      list.innerHTML = "";
+      commonErrors.forEach(err => {
+        const div = document.createElement("div");
+        div.className = "error-card";
+        div.innerHTML = `
+          <h3>${err.title}</h3>
+          <p class="muted">${err.why}</p>
+          <div style="height:10px"></div>
+          <p><span class="kbd">Incorrecto</span></p>
+          <pre>${escapeHtml(err.bad)}</pre>
+          <div style="height:10px"></div>
+          <p><span class="kbd">Correcto</span></p>
+          <pre>${escapeHtml(err.good)}</pre>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[m];
+      });
+    }
+
+    renderHome();
+    renderProgress();
+  </script>
+</body>
+</html>
